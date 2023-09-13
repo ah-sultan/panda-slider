@@ -8,17 +8,17 @@ function panda(data = {
 }) {
 
     const itemsView = data.itemsView || 1
-    const slidesPerItem = data.slidesPerItem || 1
+    const slidePerItem = data.slidesPerItem || 1
     const itemsGap = data.itemsGap || 0
     const activeItem = data.activeItem || 0
-    
+
 
 
     const targetEl = document.getElementById(data.targetEl)
     const pandaWrapper = targetEl.firstElementChild
     const pandaItems = pandaWrapper.children
     const pandaWidth = targetEl.clientWidth
-    
+
 
     const pandaItemsWidth = pandaWidth / (itemsView)
     const pandaItemsMargin = itemsGap || 0
@@ -43,19 +43,19 @@ function panda(data = {
 
 
     // Slide Moving Handler =============
-    const slideTranslateXVale = setPandaItemsWidth + pandaItemsMargin
+    const slideTranslateXVale = slidePerItem * (setPandaItemsWidth + pandaItemsMargin)
     let slideTranslateX = 0
 
     const slideTranslator = (direction) => {
 
-        if(direction === 'next'){
+        if (direction === 'next') {
             slideTranslateX = slideTranslateX - slideTranslateXVale
             return slideTranslateX
-        }else if(direction === 'prev'){
+        } else if (direction === 'prev') {
             slideTranslateX = slideTranslateX + slideTranslateXVale
             return slideTranslateX
         }
-        
+
     }
 
     const slideMovingHandler = (slideValue) => {
@@ -65,15 +65,16 @@ function panda(data = {
     // PandaItems active class Handler =======
     let activatedItem = 0
     pandaWrapper.children[activatedItem].classList.add('panda-item-active')
-    const itemsActiveHandler = (indexValue) => {
+    const itemsActiveHandler = (setIndex) => {
+        // const indexValue = setIndex * slidePerItem
+        // console.log(indexValue)
+        // if (indexValue < 1) {
+        //     pandaWrapper.children[indexValue].classList.add('panda-item-active')
+        // } else {
+        //     pandaWrapper.children[indexValue - slidePerItem].classList.remove('panda-item-active')
+        //     pandaWrapper.children[indexValue].classList.add('panda-item-active')
+        // }
 
-        if(indexValue < 1){
-            pandaWrapper.children[indexValue].classList.add('panda-item-active')
-        }else{
-            pandaWrapper.children[indexValue -1].classList.remove('panda-item-active')
-            pandaWrapper.children[indexValue].classList.add('panda-item-active')
-        }
-        
     }
 
     // Panda Prev Button Event
@@ -83,7 +84,8 @@ function panda(data = {
 
         if (lastItemActive) {
             slideMovingHandler(0)
-            itemsActiveHandler(0)
+            itemsActiveHandler('reset')
+            activatedItem = 0
         } else {
             itemsActiveHandler(activatedItem)
             slideMovingHandler(slideTranslator('prev'))
@@ -98,12 +100,12 @@ function panda(data = {
 
         if (lastItemActive) {
             slideMovingHandler(0)
-            itemsActiveHandler(0)
+            itemsActiveHandler('reset')
         } else {
             itemsActiveHandler(activatedItem)
             slideMovingHandler(slideTranslator('next'))
         }
     })
-   
+
 
 }
